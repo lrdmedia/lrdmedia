@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import { Plus, Check, MessageSquare, Calendar, Film, Image, Layers } from 'lucide-react';
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, isSameDay, parseISO } from 'date-fns';
@@ -125,9 +125,8 @@ function ContentTypeIcon({ type, size = 28 }) {
   );
 }
 
-export default function Content({ client }) {
-  const { profile } = useAuth();
-  const isAgency = profile?.role === 'agency';
+export default function Content() {
+  const { client, isAgency } = useOutletContext();
 
   const [content, setContent] = useState([]);
   const [loading, setLoading] = useState(true);

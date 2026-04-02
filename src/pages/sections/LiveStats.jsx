@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { api } from '../../lib/api';
 import StatCard from '../../components/StatCard';
 import {
@@ -271,7 +272,8 @@ function BestAdCard({ ad }) {
 }
 
 /* ==== MAIN COMPONENT ==== */
-export default function LiveStats({ client }) {
+export default function LiveStats() {
+  const { client } = useOutletContext();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);

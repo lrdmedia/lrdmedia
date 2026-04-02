@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { api } from '../../lib/api';
 import { Save, FileText } from 'lucide-react';
 
@@ -40,7 +41,8 @@ const labelStyle = {
   fontWeight: 500,
 };
 
-export default function AgencyNotes({ client }) {
+export default function AgencyNotes() {
+  const { client } = useOutletContext();
   const [notes, setNotes] = useState({ ...emptyNotes });
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

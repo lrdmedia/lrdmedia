@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useOutletContext } from 'react-router-dom';
 import { api } from '../../lib/api';
-import { useAuth } from '../../context/AuthContext';
 import Modal from '../../components/Modal';
 import { FileText, Plus, Send, ChevronDown, ChevronUp } from 'lucide-react';
 import { format } from 'date-fns';
@@ -64,9 +64,8 @@ const cardStyle = {
   overflow: 'hidden',
 };
 
-export default function MonthlyReports({ client }) {
-  const { profile } = useAuth();
-  const isAgency = profile?.role === 'agency';
+export default function MonthlyReports() {
+  const { client, isAgency } = useOutletContext();
 
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
