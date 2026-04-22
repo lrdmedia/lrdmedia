@@ -9,6 +9,10 @@ import Content from './pages/sections/Content';
 import LiveStats from './pages/sections/LiveStats';
 import MonthlyReports from './pages/sections/MonthlyReports';
 import AgencyNotes from './pages/sections/AgencyNotes';
+import WorkLayout from './pages/work/WorkLayout';
+import Today from './pages/work/Today';
+import Pipeline from './pages/work/Pipeline';
+import WorkContent from './pages/work/Content';
 
 function LoadingScreen() {
   return (
@@ -49,14 +53,14 @@ function RootRedirect() {
 
   if (loading) return <LoadingScreen />;
   if (!user) return <Navigate to="/login" replace />;
-  if (profile?.role === 'agency') return <Navigate to="/dashboard" replace />;
+  if (profile?.role === 'agency') return <Navigate to="/work/today" replace />;
 
   // Client users get redirected to their own portal
   if (profile?.client_id) {
     return <Navigate to={`/client/${profile.client_id}/overview`} replace />;
   }
 
-  return <Navigate to="/dashboard" replace />;
+  return <Navigate to="/work/today" replace />;
 }
 
 function AppRoutes() {
@@ -73,6 +77,20 @@ function AppRoutes() {
           </ProtectedRoute>
         }
       />
+
+      <Route
+        path="/work"
+        element={
+          <ProtectedRoute agencyOnly>
+            <WorkLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<Navigate to="today" replace />} />
+        <Route path="today"    element={<Today />} />
+        <Route path="pipeline" element={<Pipeline />} />
+        <Route path="content"  element={<WorkContent />} />
+      </Route>
 
       <Route
         path="/client/:id"
