@@ -1,6 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { api } from '../lib/api';
 
 const AuthContext = createContext(null);
 
@@ -16,32 +15,42 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   async function fetchProfile(userId) {
-    try {
-      const data = await api(`/profile/${userId}`);
-      setProfile(data);
-    } catch (err) {
-      console.error('Failed to fetch profile:', err);
-      // Fallback: try fetching directly from Supabase
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('role, full_name')
-          .eq('id', userId)
-          .single();
-        if (!error && data) setProfile(data);
-      } catch (e) {
-        console.error('Supabase profile fallback failed:', e);
-      }
+    // Query Supabase directly — RLS lets every user read their own profile row.
+    // Agency users also need client_id resolution if they happen to be linked
+    // to a client record (typically they are not).
+    const { data: profileRow, error: profileErr } = await supabase
+      .from('profiles')
+      .select('id, email, role, full_name')
+      .eq('id', userId)
+      .single();
+
+    if (profileErr || !profileRow) {
+      console.error('Profile lookup failed:', profileErr);
+      setProfile(null);
+      return;
     }
+
+    let client_id = null;
+    if (profileRow.role === 'client') {
+      const { data: client } = await supabase
+        .from('clients')
+        .select('id')
+        .eq('user_id', userId)
+        .single();
+      client_id = client?.id || null;
+    }
+
+    setProfile({ ...profileRow, client_id });
   }
 
   useEffect(() => {
-    // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Get initial session. Wait for the profile before clearing loading so
+    // RootRedirect/ProtectedRoute don't briefly see profile=null and loop.
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       const currentUser = session?.user ?? null;
       setUser(currentUser);
       if (currentUser) {
-        fetchProfile(currentUser.id);
+        await fetchProfile(currentUser.id);
       }
       setLoading(false);
     });
