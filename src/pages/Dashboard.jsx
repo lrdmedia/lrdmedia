@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { api } from '../lib/api';
 import Modal from '../components/Modal';
 import StatusBadge from '../components/StatusBadge';
-import { LogOut, Plus, Users, Loader2, ExternalLink } from 'lucide-react';
+import { LogOut, Plus, Users, Loader2, ExternalLink, LayoutDashboard } from 'lucide-react';
 import { format } from 'date-fns';
 
 export default function Dashboard() {
@@ -100,24 +100,44 @@ export default function Dashboard() {
             Agency Dashboard
           </p>
         </div>
-        <button
-          onClick={signOut}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-            padding: '8px 14px',
-            backgroundColor: 'transparent',
-            border: '1px solid var(--color-border)',
-            borderRadius: '6px',
-            color: 'var(--color-text-secondary)',
-            cursor: 'pointer',
-            fontSize: '13px',
-          }}
-        >
-          <LogOut size={14} />
-          Logout
-        </button>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            onClick={() => navigate('/work/today')}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              backgroundColor: 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: '6px',
+              color: 'var(--color-text-secondary)',
+              cursor: 'pointer',
+              fontSize: '13px',
+            }}
+          >
+            <LayoutDashboard size={14} />
+            My Work
+          </button>
+          <button
+            onClick={signOut}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 14px',
+              backgroundColor: 'transparent',
+              border: '1px solid var(--color-border)',
+              borderRadius: '6px',
+              color: 'var(--color-text-secondary)',
+              cursor: 'pointer',
+              fontSize: '13px',
+            }}
+          >
+            <LogOut size={14} />
+            Logout
+          </button>
+        </div>
       </header>
 
       {/* Main */}
