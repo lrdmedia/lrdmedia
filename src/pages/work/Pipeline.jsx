@@ -30,7 +30,7 @@ export default function Pipeline() {
 
   async function load() {
     try {
-      const data = await api('/leads');
+      const data = await api('/work/leads');
       setLeads(data);
     } catch (e) { setError(e.message); }
     finally { setLoading(false); }
@@ -41,7 +41,7 @@ export default function Pipeline() {
     const next = STAGES[currentIdx + direction];
     if (!next) return;
     try {
-      await api(`/leads/${lead.id}`, { method: 'PATCH', body: { stage: next.key } });
+      await api(`/work/leads/${lead.id}`, { method: 'PATCH', body: { stage: next.key } });
       load();
     } catch (e) { setError(e.message); }
   }
@@ -50,7 +50,7 @@ export default function Pipeline() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api('/leads', { method: 'POST', body: newLead });
+      await api('/work/leads', { method: 'POST', body: newLead });
       setShowAdd(false);
       setNewLead({ handle: '', name: '', business_name: '', source: 'manychat', dm_snippet: '' });
       load();
@@ -61,7 +61,7 @@ export default function Pipeline() {
   async function deleteLead(lead) {
     if (!confirm(`Delete "${lead.handle || lead.name}"?`)) return;
     try {
-      await api(`/leads/${lead.id}`, { method: 'DELETE' });
+      await api(`/work/leads/${lead.id}`, { method: 'DELETE' });
       setEditing(null);
       load();
     } catch (e) { setError(e.message); }
@@ -70,7 +70,7 @@ export default function Pipeline() {
   async function saveEdit() {
     try {
       const { id, ...patch } = editing;
-      await api(`/leads/${id}`, { method: 'PATCH', body: patch });
+      await api(`/work/leads/${id}`, { method: 'PATCH', body: patch });
       setEditing(null);
       load();
     } catch (e) { setError(e.message); }

@@ -38,7 +38,7 @@ export default function Content() {
 
   async function load() {
     try {
-      const data = await api('/scripts');
+      const data = await api('/work/scripts');
       setItems(data);
     } catch (e) { setError(e.message); }
     finally { setLoading(false); }
@@ -49,7 +49,7 @@ export default function Content() {
     const next = STATUSES[currentIdx + direction];
     if (!next) return;
     try {
-      await api(`/scripts/${item.id}`, { method: 'PATCH', body: { status: next.key } });
+      await api(`/work/scripts/${item.id}`, { method: 'PATCH', body: { status: next.key } });
       load();
     } catch (e) { setError(e.message); }
   }
@@ -58,7 +58,7 @@ export default function Content() {
     e.preventDefault();
     setSaving(true);
     try {
-      await api('/scripts', { method: 'POST', body: newItem });
+      await api('/work/scripts', { method: 'POST', body: newItem });
       setShowAdd(false);
       setNewItem({ title: '', pillar: 'education', content_type: 'reel', body: '', hook: '', cta: '' });
       load();
@@ -69,7 +69,7 @@ export default function Content() {
   async function deleteItem(item) {
     if (!confirm(`Delete "${item.title}"?`)) return;
     try {
-      await api(`/scripts/${item.id}`, { method: 'DELETE' });
+      await api(`/work/scripts/${item.id}`, { method: 'DELETE' });
       setEditing(null);
       load();
     } catch (e) { setError(e.message); }
@@ -88,7 +88,7 @@ export default function Content() {
         cta: editing.cta,
         notes: editing.notes,
       };
-      await api(`/scripts/${editing.id}`, { method: 'PATCH', body: patch });
+      await api(`/work/scripts/${editing.id}`, { method: 'PATCH', body: patch });
       setEditing(null);
       load();
     } catch (e) { setError(e.message); }

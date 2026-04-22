@@ -25,7 +25,7 @@ export default function Today() {
 
   async function load() {
     try {
-      const d = await api('/dashboard/briefing');
+      const d = await api('/work/briefing');
       setData(d);
     } catch (e) {
       setError(e.message);
@@ -36,7 +36,7 @@ export default function Today() {
 
   async function toggleTask(task) {
     try {
-      await api(`/tasks/${task.id}`, { method: 'PATCH', body: { done: !task.done } });
+      await api(`/work/tasks/${task.id}`, { method: 'PATCH', body: { done: !task.done } });
       load();
     } catch (e) { setError(e.message); }
   }
@@ -46,7 +46,7 @@ export default function Today() {
     if (!newTaskTitle.trim()) return;
     setAdding(true);
     try {
-      await api('/tasks', { method: 'POST', body: { title: newTaskTitle.trim() } });
+      await api('/work/tasks', { method: 'POST', body: { title: newTaskTitle.trim() } });
       setNewTaskTitle('');
       load();
     } catch (e) { setError(e.message); }
